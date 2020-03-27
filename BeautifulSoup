@@ -1,0 +1,28 @@
+import urllib.request,urllib.parse, urllib.error
+from bs4 import BeautifulSoup
+import ssl
+
+# Ignore SSL certificate errors
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+
+
+
+def follow(url):
+   html = urllib.request.urlopen(url, context=ctx).read()
+   soup = BeautifulSoup(html, "html.parser")
+   tags = soup('a')
+   i = 0
+   for tag in tags:
+      i = i+1
+      if i==18:
+         j = str(tag.contents[0])
+         print(j)
+         if j[0] == 'R': break
+         url= tag.get('href',None)
+         follow(url)
+         
+         
+url = input("Enter -")
+follow(url)
